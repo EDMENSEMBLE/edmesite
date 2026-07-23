@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EDME - Experimental Music</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=VT323&display=swap');
+
+    /* ============================================================
+       OPEN DYSLEXIC FONT
+       Loaded from Fontsource's public CDN (jsDelivr) instead of being
+       embedded as base64, so the file stays small. This is what powers
+       the "dyslexia friendly" toggle button in the header below.
+       To edit/replace this font later, only these 2 blocks matter. */
+    @font-face {
+      font-family: 'OpenDyslexic';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-400-normal.woff2') format('woff2'),
+           url('https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-400-normal.woff') format('woff');
+    }
+    @font-face {
+      font-family: 'OpenDyslexic';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-700-normal.woff2') format('woff2'),
+           url('https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-700-normal.woff') format('woff');
+    }
+    /* ============================================================ */
+
+    :root {
+      /* ---- Colors ---- */
+      --bg:     #f7f7f2;
+      --fg:     #111111;
+      --muted:  #555550;
+      --border: #c8c0b0;
+      --link:   #1a4fd6;
+      --red:    #c0392b;
+      --green:  #2e7d32;
+      --orange: #c0392b;
+      --white:  #ffffff;
+      --black:  #000000;
+      --visited: #7b3fbf;
+      --overlay-muted: #cccccc;
+      --glitch-c1: #00e5ff;
+      --glitch-c2: #ff2fd0;
+
+      /* ---- Dark-mode palette (mobile only, see media query below) ---- */
+      --dark-bg: #0d0d0d;
+      --dark-fg: #00e666;
+      --dark-muted: #00a34a;
+      --dark-border: #1a4d2e;
+      --dark-link: #00e666;
+      --dark-red: #00ff7f;
+      --dark-green: #39ff14;
+      --dark-orange: #00cc55;
+      --dark-visited: #00b34a;
+      --dark-hover: #39ff14;
+      --dark-next-bar-span: #004d22;
+      --dark-glitch: #fff200;
+
+      /* ---- Word spacing ---- */
+      --ws-normal: 0;
+      --ws-loose: 0.1em;
+
+      /* ---- Layout ---- */
+      --max:    900px;
+
+      /* ---- Border widths ---- */
+      --bw-1: 1px;
+      --bw-2: 2px;
+
+      /* ---- Radii (none of the UI currently uses rounded corners —
+         token reserved so a future rounded-corner theme is a single edit) ---- */
+      --radius-none: 0;
+
+      /* ---- Font families ---- */
+      --font-mono: 'Courier Prime', monospace;
+      --font-display: 'VT323', monospace;
+      --font-dyslexic: 'OpenDyslexic', sans-serif;
+
+      /* ---- Font sizes: px scale (used by the VT323 "display" type and
+         a few fixed-size UI elements) ---- */
+      --fs-px-13: 13px;
+      --fs-px-14: 14px;
+      --fs-px-15: 15px;
+      --fs-px-16: 16px;
+      --fs-px-20: 20px;
+      --fs-px-22: 22px;
+
+      /* ---- Font sizes: rem scale (body copy / UI text) ---- */
+      --fs-2xs:  0.68em;
+      --fs-xs:   0.72rem;
+      --fs-sm:   0.75rem;
+      --fs-sm-2: 0.76rem;
+      --fs-sm-3: 0.78rem;
+      --fs-sm-4: 0.8rem;
+      --fs-sm-5: 0.82rem;
+      --fs-sm-6: 0.85rem;
+      --fs-sm-7: 0.88rem;
+      --fs-base: 0.9rem;
+      --fs-base-2: 0.92rem;
+      --fs-md:   0.95rem;
+      --fs-md-2: 1rem;
+      --fs-md-3: 1.05rem;
+      --fs-lg:   1.2rem;
+      --fs-xl:   1.7rem;
+      --fs-2xl:  2rem;
+      --fs-hero-min: 1.3rem;
+      --fs-hero-max: 2.8rem;
+      --fs-ascii-note-min: 8px;
+      --fs-ascii-note-max: 12px;
+      --fs-ascii-logo-min: 5px;
+      --fs-ascii-logo-max: 11px;
+
+      /* ---- Letter spacing ---- */
+      --ls-tight: 0.02em;
+      --ls-sm: 0.04em;
+      --ls-md: 0.06em;
+      --ls-lg: 0.08em;
+      --ls-xl: 0.1em;
+
+      /* ---- Line heights ---- */
+      --lh-tight: 1.1;
+      --lh-snug: 1.25;
+      --lh-normal: 1.35;
+      --lh-relaxed: 1.55;
+      --lh-md: 1.4;
+      --lh-loose: 1.6;
+      --lh-looser: 1.65;
+      --lh-loosest: 1.7;
+      --lh-copious: 1.9;
+      --lh-supporters: 2.2;
+
+      /* ---- Spacing: rem scale ---- */
+      --sp-1: 0.2rem;
+      --sp-1b: 0.25rem;
+      --sp-2: 0.3rem;
+      --sp-3: 0.35rem;
+      --sp-4: 0.4rem;
+      --sp-4b: 0.45rem;
+      --sp-5: 0.5rem;
+      --sp-5b: 0.55rem;
+      --sp-6: 0.6rem;
+      --sp-7: 0.7rem;
+      --sp-8: 0.8rem;
+      --sp-9: 0.9rem;
+      --sp-10: 1rem;
+      --sp-10b: 1.1rem;
+      --sp-11: 1.2rem;
+      --sp-12: 1.4rem;
+      --sp-13: 1.5rem;
+      --sp-14: 1.8rem;
+      --sp-15: 2rem;
+      --sp-16: 2.5rem;
+      --sp-17: 3rem;
+      --sp-18: 5rem;
+
+      /* ---- Spacing: em scale (relative to element's own font-size) ---- */
+      --sp-em-icon: 0.15em;
+
+      /* ---- Spacing: px scale (fine-grained UI padding/offsets) ---- */
+      --sp-px-1: 1px;
+      --sp-px-2: 2px;
+      --sp-px-3: 3px;
+      --sp-px-4: 4px;
+      --sp-px-5: 5px;
+      --sp-px-6: 6px;
+      --sp-px-8: 8px;
+      --sp-px-9: 9px;
+      --sp-px-12: 12px;
+      --sp-px-14: 14px;
+
+      /* ---- Content measures (container max-widths) ---- */
+      --measure-sm: 400px;
+      --measure-md: 420px;
+      --measure-lg: 560px;
+      --measure-lg-2: 580px;
+      --measure-xl: 640px;
+      --measure-2xl: 700px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-mono);
+      font-size: var(--fs-px-14);
+      line-height: var(--lh-loose);
+    }
+
+    a { color: var(--link); }
+    a:visited { color: var(--visited); }
+    a:hover { color: var(--red); }
+
+    /* Black-and-white ASCII icons standing in for emoji: plain words in
+       [ ] brackets, typed directly into the HTML (not generated by CSS),
+       so they always show up. This just styles their size/color/spacing. */
+    .ico {
+      font-family: var(--font-mono);
+      font-size: var(--fs-2xs);
+      font-weight: 700;
+      letter-spacing: var(--ls-tight);
+      color: var(--muted);
+      white-space: nowrap;
+      margin: 0 var(--sp-em-icon);
+    }
+
+    .marquee-wrap {
+      background: var(--fg);
+      color: var(--bg);
+      font-family: var(--font-display);
+      font-size: var(--fs-px-16);
+      letter-spacing: var(--ls-md);
+      padding: var(--sp-px-4) 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .marquee-wrap .inner {
+      display: inline-block;
+      will-change: transform;
+      animation: mq 32s linear infinite;
+      -webkit-animation: mq 32s linear infinite;
+    }
+    @-webkit-keyframes mq {
+      from { -webkit-transform: translateX(100vw); transform: translateX(100vw); }
+      to   { -webkit-transform: translateX(-100%); transform: translateX(-100%); }
+    }
+    @keyframes mq {
+      from { transform: translateX(100vw); }
+      to   { transform: translateX(-100%); }
+    }
+
+    header {
+      border-bottom: var(--bw-2) solid var(--fg);
+      text-align: center;
+      padding: var(--sp-14) var(--sp-10) 0;
+    }
+
+    .ascii-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-10);
+      margin-bottom: var(--sp-6);
+      overflow-x: auto;
+    }
+
+    .ascii-note {
+      font-family: var(--font-mono);
+      font-size: clamp(var(--fs-ascii-note-min), 1.3vw, var(--fs-ascii-note-max));
+      line-height: var(--lh-normal);
+      color: var(--muted);
+      white-space: pre;
+      flex-shrink: 0;
+      margin: 0;
+    }
+    /* Note: the old .ascii-bear art had uneven blank space baked into the
+       text block itself, which pushed it visually off-center. It needed a
+       "margin-left: -3rem" hack on the second copy to fake-center it.
+       The new note art is tightly cropped with equal padding on all sides,
+       so no compensating hack is needed here anymore. */
+
+    .ascii-logo {
+      font-family: var(--font-mono);
+      font-size: clamp(var(--fs-ascii-logo-min), 1.4vw, var(--fs-ascii-logo-max));
+      line-height: var(--lh-snug);
+      color: var(--fg);
+      white-space: pre;
+      letter-spacing: 0;
+      flex-shrink: 1;
+    }
+
+    .site-title {
+      font-family: var(--font-mono);
+      font-size: clamp(var(--fs-hero-min), 4vw, var(--fs-hero-max));
+      font-weight: 700;
+      letter-spacing: var(--ls-sm);
+      line-height: var(--lh-tight);
+      margin-bottom: var(--sp-1);
+    }
+
+    .site-sub {
+      font-family: var(--font-display);
+      font-size: var(--fs-px-20);
+      color: var(--muted);
+      letter-spacing: var(--ls-xl);
+      margin-bottom: var(--sp-10);
+    }
+
+    nav {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 var(--sp-10) 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      border-top: var(--bw-1) solid var(--border);
+    }
+
+    nav button {
+      background: none;
+      border: none;
+      border-bottom: var(--bw-2) solid transparent;
+      padding: var(--sp-6) var(--sp-10);
+      font-family: var(--font-mono);
+      font-size: var(--fs-md-2);
+      color: var(--muted);
+      cursor: pointer;
+      letter-spacing: var(--ls-sm);
+      margin-bottom: calc(var(--bw-2) * -1);
+      transition: color 0.1s;
+    }
+
+    nav button:hover { color: var(--fg); }
+    nav button.active { color: var(--fg); border-bottom-color: var(--fg); font-weight: 700; }
+
+    main {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: var(--sp-16) var(--sp-13) var(--sp-18);
+      text-align: center;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    h1 { font-size: var(--fs-xl); font-weight: 700; letter-spacing: var(--ls-tight); margin-bottom: var(--sp-10); }
+
+    h2 {
+      font-size: var(--fs-md-3);
+      font-weight: 700;
+      letter-spacing: var(--ls-md);
+      text-transform: uppercase;
+      color: var(--orange);
+      margin: var(--sp-15) 0 var(--sp-6);
+    }
+
+    p {
+      max-width: 60ch;
+      margin: 0 auto var(--sp-9);
+      color: var(--fg);
+      font-size: var(--fs-base);
+    }
+
+    p strong { color: var(--fg); }
+    p em { color: var(--orange); font-style: normal; font-weight: 700; }
+
+    hr {
+      border: none;
+      border-top: var(--bw-1) solid var(--border);
+      margin: var(--sp-14) auto;
+      max-width: var(--measure-sm);
+    }
+
+    .small { font-size: var(--fs-sm); color: var(--muted); }
+    .sidebar-note { font-size: var(--fs-sm-3); color: var(--muted); margin: 0 0 var(--sp-px-6); }
+    .tier-label { margin: var(--sp-px-12) 0 var(--sp-px-4); }
+
+    /* HOME */
+    .hero {
+      padding: var(--sp-15) var(--sp-10) var(--sp-15);
+      border-bottom: var(--bw-1) solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-10);
+    }
+
+    .hero-tagline {
+      font-family: var(--font-display);
+      font-size: var(--fs-px-22);
+      color: var(--fg);
+      letter-spacing: var(--ls-lg);
+    }
+
+    .mission-statement {
+      max-width: 46ch;
+      margin: var(--sp-8) auto var(--sp-11);
+      padding: var(--sp-9) var(--sp-11);
+      border-top: var(--bw-1) solid var(--border);
+      border-bottom: var(--bw-1) solid var(--border);
+      font-size: var(--fs-base-2);
+      line-height: var(--lh-relaxed);
+      color: var(--fg);
+    }
+
+    .mission-statement strong {
+      color: var(--orange);
+    }
+
+    .next-bar {
+      background: var(--fg);
+      color: var(--bg);
+      padding: var(--sp-7) var(--sp-12);
+      font-size: var(--fs-sm-5);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-8);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .next-bar strong { color: var(--red); }
+    .next-bar span { color: var(--overlay-muted); font-size: var(--fs-sm-5); }
+
+    /* GLITCH TEXT — a periodic chromatic-aberration flicker instead of a
+       flat highlight color, used on red-highlighted text (the two callout
+       phrases plus the event date/time stamps). Mostly still, with a
+       quick RGB-split stutter every few seconds. */
+    .glitch-text {
+      display: inline-block;
+      animation: glitch-flicker 3s infinite;
+      -webkit-animation: glitch-flicker 3s infinite;
+    }
+    @-webkit-keyframes glitch-flicker {
+      0%, 92%, 100% { text-shadow: none; -webkit-transform: translate(0,0); transform: translate(0,0); }
+      93% { text-shadow: 2px 0 var(--glitch-c1), -2px 0 var(--glitch-c2); -webkit-transform: translate(-1px, 1px); transform: translate(-1px, 1px); }
+      95% { text-shadow: -2px 1px var(--glitch-c1), 2px -1px var(--glitch-c2); -webkit-transform: translate(1px, -1px); transform: translate(1px, -1px); }
+      97% { text-shadow: 1px 0 var(--glitch-c1), -1px 0 var(--glitch-c2); -webkit-transform: translate(0,0); transform: translate(0,0); }
+    }
+    @keyframes glitch-flicker {
+      0%, 92%, 100% { text-shadow: none; transform: translate(0,0); }
+      93% { text-shadow: 2px 0 var(--glitch-c1), -2px 0 var(--glitch-c2); transform: translate(-1px, 1px); }
+      95% { text-shadow: -2px 1px var(--glitch-c1), 2px -1px var(--glitch-c2); transform: translate(1px, -1px); }
+      97% { text-shadow: 1px 0 var(--glitch-c1), -1px 0 var(--glitch-c2); transform: translate(0,0); }
+    }
+
+    .video-wrap { width: 100%; max-width: var(--measure-lg); }
+
+    .v-label {
+      font-family: var(--font-display);
+      font-size: var(--fs-px-16);
+      color: var(--muted);
+      letter-spacing: var(--ls-xl);
+      margin-bottom: var(--sp-px-4);
+      text-align: left;
+    }
+
+    .video-embed { position: relative; padding-bottom: 56.25%; background: var(--black); }
+    .video-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+    .listen-links { font-size: var(--fs-base); color: var(--fg); }
+    .listen-links a { margin: 0 var(--sp-4); }
+
+    /* EVENTS */
+    .events-list { list-style: none; padding: 0; margin: 0 auto; max-width: var(--measure-lg-2); text-align: left; }
+    .events-list li { padding: var(--sp-10b) 0; border-bottom: var(--bw-1) solid var(--border); }
+    .events-list li:first-child { border-top: var(--bw-1) solid var(--border); }
+
+    time {
+      display: block;
+      font-family: var(--font-display);
+      font-size: var(--fs-px-16);
+      color: var(--red);
+      letter-spacing: var(--ls-md);
+      animation: glitch-flicker 3s infinite;
+      -webkit-animation: glitch-flicker 3s infinite;
+    }
+    .ev-name { font-weight: 700; font-size: var(--fs-md-2); color: var(--fg); }
+    .ev-detail { font-size: var(--fs-sm-5); color: var(--fg); }
+    .ev-tag {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: var(--fs-px-15);
+      border: var(--bw-1) solid var(--border);
+      padding: var(--sp-px-1) var(--sp-px-6);
+      color: var(--green);
+      letter-spacing: var(--ls-md);
+      margin-top: var(--sp-px-3);
+    }
+
+    /* ABOUT */
+    .about-cols {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: var(--sp-17);
+      text-align: left;
+      max-width: var(--max);
+      margin: var(--sp-13) auto 0;
+    }
+
+    @media (max-width: 580px) { .about-cols { grid-template-columns: 1fr; gap: var(--sp-13); } }
+
+    .prose p { margin-left: 0; color: var(--muted); font-size: var(--fs-base); margin-bottom: var(--sp-8); }
+    .prose h2 { margin-top: var(--sp-13); }
+
+    .sidebar-section { margin-bottom: var(--sp-13); }
+    .sidebar-section h3 {
+      font-family: var(--font-display);
+      font-size: var(--fs-px-15);
+      color: var(--orange);
+      letter-spacing: var(--ls-xl);
+      text-transform: uppercase;
+      border-bottom: var(--bw-1) solid var(--border);
+      padding-bottom: var(--sp-px-4);
+      margin-bottom: var(--sp-px-6);
+    }
+
+    .person-list { list-style: none; font-size: var(--fs-sm-6); line-height: var(--lh-supporters); color: var(--fg); }
+    .person-list .role { color: var(--muted); font-size: var(--fs-sm-2); }
+    .person-list .email-link { font-size: var(--fs-sm); display: block; }
+
+    /* BIO DROPDOWNS */
+    .bios-section { margin-top: var(--sp-17); text-align: left; max-width: var(--max); margin-left: auto; margin-right: auto; }
+    .bios-section > h2 { font-size: var(--fs-md-2); font-weight: 700; letter-spacing: var(--ls-md); text-transform: uppercase; color: var(--orange); margin-bottom: var(--sp-4); border-bottom: var(--bw-1) solid var(--border); padding-bottom: var(--sp-4); }
+    .collaborator-note { font-size: var(--fs-sm-4); color: var(--muted); margin-bottom: var(--sp-10); }
+
+    details.bio-group { margin-bottom: var(--sp-5); }
+    details.bio-group > summary {
+      font-size: var(--fs-base);
+      font-weight: 700;
+      color: var(--fg);
+      cursor: pointer;
+      list-style: none;
+      padding: var(--sp-5b) 0;
+      border-bottom: var(--bw-1) solid var(--border);
+    }
+    details.bio-group > summary::-webkit-details-marker { display: none; }
+    details.bio-group > summary::before { content: '\25B8  '; color: var(--green); }
+    details.bio-group[open] > summary::before { content: '\25BE  '; }
+
+    .bio-list { list-style: none; padding: 0; }
+    .bio-list li { padding: var(--sp-9) 0 var(--sp-9) var(--sp-10); border-bottom: var(--bw-1) solid var(--border); font-size: var(--fs-sm-6); }
+    .bio-list li:last-child { border-bottom: none; }
+    .bio-name { font-weight: 700; color: var(--fg); }
+    .bio-role { color: var(--orange); font-size: var(--fs-sm-2); display: block; margin-bottom: var(--sp-1); }
+    .bio-text { color: var(--fg); line-height: var(--lh-looser); margin-top: var(--sp-1); }
+
+    /* NMF EQUITY BANNER */
+    .nmf-equity-banner {
+      background: var(--fg);
+      color: var(--bg);
+      padding: var(--sp-10) var(--sp-13);
+      font-size: var(--fs-base);
+      max-width: var(--measure-xl);
+      margin: 0 auto var(--sp-13);
+      line-height: var(--lh-loosest);
+      text-align: left;
+    }
+    .nmf-equity-banner strong { color: var(--red); }
+
+    /* COMPOSERS YEAR DROPDOWNS */
+    .composers-year-section { max-width: var(--measure-lg); margin: var(--sp-5) auto; text-align: left; }
+    details.year-drop { margin-bottom: var(--sp-1b); }
+    details.year-drop > summary {
+      font-family: var(--font-display);
+      font-size: var(--fs-px-20);
+      color: var(--green);
+      cursor: pointer;
+      list-style: none;
+      padding: var(--sp-3) 0;
+      border-bottom: var(--bw-1) solid var(--border);
+      letter-spacing: var(--ls-md);
+    }
+    details.year-drop > summary::-webkit-details-marker { display: none; }
+    details.year-drop > summary::before { content: '\25B8 '; color: var(--muted); font-size: var(--fs-sm); }
+    details.year-drop[open] > summary::before { content: '\25BE '; }
+
+    .year-composers { list-style: none; padding: 0 0 0 var(--sp-10); }
+    .year-composers li { padding: var(--sp-4) 0; border-bottom: var(--bw-1) solid var(--border); font-size: var(--fs-sm-6); color: var(--fg); }
+    .year-composers li:last-child { border-bottom: none; }
+    .piece-title { color: var(--muted); font-style: italic; font-size: var(--fs-sm-4); display: block; }
+
+    /* INDIVIDUAL SUPPORTERS */
+    .individual-supporters { max-width: var(--measure-lg); margin: var(--sp-13) auto 0; text-align: left; }
+    .individual-supporters h2 { font-size: var(--fs-md-2); font-weight: 700; letter-spacing: var(--ls-md); text-transform: uppercase; color: var(--orange); margin-bottom: var(--sp-8); }
+    .supporter-names { font-size: var(--fs-sm-6); color: var(--fg); line-height: var(--lh-supporters); column-count: 2; column-gap: var(--sp-15); }
+    @media (max-width: 500px) { .supporter-names { column-count: 1; } }
+
+    /* NMF */
+    .nmf-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-11);
+      margin: var(--sp-13) auto;
+      max-width: var(--measure-xl);
+      text-align: left;
+    }
+
+    @media (max-width: 520px) { .nmf-grid { grid-template-columns: 1fr; } }
+
+    .nmf-box { border: var(--bw-1) solid var(--fg); padding: var(--sp-11); }
+    .nmf-box h3 { color: var(--fg); font-size: var(--fs-base); margin-bottom: var(--sp-5); }
+    .nmf-box p { margin-left: 0; font-size: var(--fs-sm-5); }
+
+    .btn {
+      display: inline-block;
+      margin-top: var(--sp-8);
+      background: var(--fg);
+      color: var(--bg);
+      font-family: var(--font-mono);
+      font-size: var(--fs-sm-3);
+      font-weight: 700;
+      letter-spacing: var(--ls-md);
+      padding: var(--sp-px-5) var(--sp-px-14);
+      text-decoration: none;
+    }
+
+    .btn:hover { background: var(--red); color: var(--white); }
+    .btn-ghost { background: none; color: var(--fg); border: var(--bw-1) solid var(--fg); }
+    .btn-ghost:hover { background: var(--fg); color: var(--bg); }
+
+    /* DONATE */
+    .donate-list { list-style: none; max-width: var(--measure-md); margin: var(--sp-10) auto; text-align: left; }
+    .donate-list li { border-bottom: var(--bw-1) solid var(--border); padding: var(--sp-6) 0; font-size: var(--fs-base); }
+    .donate-list li a { font-weight: 700; }
+
+    /* Hotlinked image (loaded directly from its source URL, not hosted
+       here) shown above the donate links. */
+    .donate-image {
+      max-width: var(--measure-lg);
+      margin: 0 auto var(--sp-11);
+      border: var(--bw-1) solid var(--border);
+    }
+    .donate-image img { display: block; width: 100%; height: auto; }
+
+    /* CONTACT */
+    .contact-table { margin: var(--sp-10) auto; font-size: var(--fs-sm-7); text-align: left; border-collapse: collapse; width: 100%; max-width: var(--measure-2xl); }
+    .contact-table td { padding: var(--sp-4b) var(--sp-10) var(--sp-4b) 0; vertical-align: top; border-bottom: var(--bw-1) solid var(--border); }
+    .contact-table td:first-child { color: var(--muted); font-size: var(--fs-sm-3); white-space: nowrap; padding-right: var(--sp-13); }
+
+    /* CONTACT — mobile: stack each row's label above its value instead of
+       two rigid columns, since long labels + long emails don't fit
+       side-by-side on narrow screens. */
+    @media (max-width: 600px) {
+      .contact-table, .contact-table tbody, .contact-table tr, .contact-table td {
+        display: block;
+        width: 100%;
+      }
+      .contact-table tr {
+        padding: var(--sp-7) 0;
+        border-bottom: var(--bw-1) solid var(--border);
+      }
+      .contact-table td {
+        padding: var(--sp-1) 0;
+        border-bottom: none;
+        white-space: normal;
+      }
+      .contact-table td:first-child {
+        padding-right: 0;
+        font-weight: 700;
+        margin-bottom: var(--sp-1);
+      }
+    }
+
+    /* ARCHIVE */
+    .archive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      margin-top: var(--sp-13);
+      max-width: var(--measure-2xl);
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      border-top: var(--bw-1) solid var(--fg);
+      border-left: var(--bw-1) solid var(--fg);
+    }
+    .archive-item { border-right: var(--bw-1) solid var(--fg); border-bottom: var(--bw-1) solid var(--fg); padding: var(--sp-9) var(--sp-10); font-size: var(--fs-sm-5); }
+    .archive-item strong { color: var(--fg); display: block; margin-bottom: var(--sp-px-2); }
+    .archive-item .desc { color: var(--muted); }
+    .archive-item .tag { font-family: var(--font-display); font-size: var(--fs-px-13); color: var(--orange); letter-spacing: var(--ls-md); display: block; margin-bottom: var(--sp-px-3); }
+    .archive-item .doc-link { font-size: var(--fs-sm-3); }
+    .events-list .doc-link { display: block; font-size: var(--fs-sm-3); margin-top: var(--sp-px-5); }
+
+    /* FOOTER */
+    footer { border-top: var(--bw-2) solid var(--fg); padding: var(--sp-12) var(--sp-13); font-size: var(--fs-sm-3); text-align: center; color: var(--muted); }
+    footer div { max-width: var(--max); margin: 0 auto; line-height: var(--lh-copious); }
+    footer a { font-weight: 700; }
+
+    /* ACCESSIBILITY TOGGLE BUTTON */
+    #a11y-btn {
+      position: fixed;
+      bottom: var(--sp-11);
+      right: var(--sp-11);
+      z-index: 999;
+      background: var(--fg);
+      color: var(--bg);
+      border: none;
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      letter-spacing: var(--ls-md);
+      padding: var(--sp-5) var(--sp-9);
+      cursor: pointer;
+      line-height: var(--lh-md);
+      box-shadow: var(--sp-px-2) var(--sp-px-2) 0 var(--border);
+    }
+    #a11y-btn:hover { background: var(--green); }
+    #a11y-btn.active { background: var(--green); color: var(--white); }
+
+    /* DYSLEXIA FRIENDLY MODE */
+    body.dyslexic,
+    body.dyslexic p,
+    body.dyslexic li,
+    body.dyslexic td,
+    body.dyslexic div,
+    body.dyslexic span,
+    body.dyslexic h1,
+    body.dyslexic h2,
+    body.dyslexic h3,
+    body.dyslexic a,
+    body.dyslexic button,
+    body.dyslexic strong,
+    body.dyslexic .ev-name,
+    body.dyslexic .ev-detail,
+    body.dyslexic .bio-text,
+    body.dyslexic .bio-name,
+    body.dyslexic .bio-role,
+    body.dyslexic .collaborator-note,
+    body.dyslexic .listen-links,
+    body.dyslexic .hero-tagline,
+    body.dyslexic .next-bar,
+    body.dyslexic .small,
+    body.dyslexic .desc,
+    body.dyslexic .role,
+    body.dyslexic nav button {
+      font-family: var(--font-dyslexic) !important;
+      line-height: var(--lh-copious) !important;
+      letter-spacing: var(--ls-tight) !important;
+      word-spacing: var(--ws-loose) !important;
+    }
+
+    body.dyslexic {
+      font-size: var(--fs-px-15) !important;
+    }
+
+    /* Motion can make reading harder, so switch off the glitch flicker
+       (but keep the highlight color) when dyslexia-friendly mode is on. */
+    body.dyslexic .glitch-text,
+    body.dyslexic time {
+      animation: none !important;
+      -webkit-animation: none !important;
+      text-shadow: none !important;
+      transform: none !important;
+    }
+
+    /* Keep ASCII / decorative elements as-is */
+    body.dyslexic .ascii-logo,
+    body.dyslexic .ascii-note,
+    body.dyslexic .ico,
+    body.dyslexic .marquee-wrap,
+    body.dyslexic .marquee-wrap *,
+    body.dyslexic .v-label,
+    body.dyslexic .site-sub,
+    body.dyslexic time,
+    body.dyslexic .ev-tag,
+    body.dyslexic .archive-item .tag,
+    body.dyslexic .sidebar-section h3,
+    body.dyslexic details.year-drop > summary {
+      font-family: var(--font-display) !important;
+      letter-spacing: var(--ws-normal) !important;
+      word-spacing: var(--ws-normal) !important;
+    }
+
+    body.dyslexic h1 { font-size: var(--fs-2xl) !important; }
+    body.dyslexic h2 { font-size: var(--fs-lg) !important; }
+    body.dyslexic nav button { font-size: var(--fs-md-2) !important; }
+
+    /* DARK MODE - mobile only */
+    @media (prefers-color-scheme: dark) and (max-width: 768px) {
+      :root {
+        --bg:     var(--dark-bg);
+        --fg:     var(--dark-fg);
+        --muted:  var(--dark-muted);
+        --border: var(--dark-border);
+        --link:   var(--dark-link);
+        --red:    var(--dark-red);
+        --green:  var(--dark-green);
+        --orange: var(--dark-orange);
+      }
+      body { background: var(--bg); color: var(--fg); }
+      a { color: var(--link); }
+      a:visited { color: var(--dark-visited); }
+      a:hover { color: var(--dark-hover); }
+      .marquee-wrap { background: var(--dark-fg); color: var(--dark-bg); }
+      header { border-bottom-color: var(--fg); }
+      .next-bar { background: var(--fg); color: var(--dark-bg); }
+      .next-bar strong { color: var(--dark-bg); }
+      .next-bar span { color: var(--dark-next-bar-span); }
+      .nmf-box { border-color: var(--fg); }
+      /* .glitch-text normally reuses --red for emphasis, but in dark mode
+         --red and --fg are both bright greens, so red-on-green banners
+         (.next-bar, .nmf-equity-banner) became unreadable. Give glitch
+         text its own high-contrast color here instead. */
+      .next-bar strong.glitch-text,
+      .nmf-equity-banner strong.glitch-text {
+        color: var(--dark-glitch);
+      }
+      .btn { background: var(--fg); color: var(--dark-bg); }
+      .btn-ghost { background: none; color: var(--fg); border-color: var(--fg); }
+      .btn-ghost:hover { background: var(--fg); color: var(--dark-bg); }
+      .archive-grid { border-color: var(--fg); }
+      .archive-item { border-color: var(--fg); }
+      footer { border-top-color: var(--fg); }
+    }
+  </style>
+</head>
+<body>
+
+<button id="a11y-btn" onclick="toggleDyslexic()" title="Toggle dyslexia-friendly font"><span class="ico">|</span> dyslexia<br>friendly</button>
+
+<div class="marquee-wrap">
+  <span class="inner">
+    &nbsp;&nbsp;<span class="ico">ᯓ★</span> EDME <span class="ico">⋆✴︎˚｡⋆</span> EUGENE DIFFICULT MUSIC ENSEMBLE <span class="ico">ᯓ★</span> experimental music for curious listeners <span class="ico">⋆✴︎˚｡⋆</span> our first ever gala is september 5, 2026 at Headquarters Wine Bar <span class="ico">ᯓ★</span> call for scores for the 2026 new music festival is CLOSED <span class="ico">⋆✴︎˚｡⋆</span> @edmensemble <span class="ico">ᯓ★</span> new music festival OCTOBER 2&ndash;4, 2026 &middot; eugene, OR <span class="ico">⋆✴︎˚｡⋆</span> &nbsp;&nbsp; <span class="ico">ᯓ★</span> EDME <span class="ico">⋆✴︎˚｡⋆</span> EUGENE DIFFICULT MUSIC ENSEMBLE <span class="ico">ᯓ★</span> experimental music for curious listeners <span class="ico">⋆✴︎˚｡⋆</span>
+  </span>
+</div>
+
+
+<header>
+  <div class="ascii-header-row">
+    <pre class="ascii-note">                          
+                 █▓▓      
+                 ██▓▓     
+                 ██ ▓▓▓   
+                 ██  ▓▓▓  
+                 ██   ▓▓  
+                 ██   ▓▓  
+                 ██  ▓▓   
+                 ██ ▓▓    
+                 ██▓▓     
+          ▓      ██       
+     ▓▓▓▓▓▓▓▓▓▓▓ ██       
+    ▓▓█████████▓▓██       
+   ▓▓███████████▓██       
+  ▓▓▓███████████▓██       
+   ▓▓███████████▓▓        
+    ▓▓█████████▓▓         
+     ▓▓▓▓▓▓▓▓▓▓▓          
+          ▓               
+                          </pre>
+    <div class="ascii-logo">░▒▓████████▓▒░▒▓███████▓▒░░▒▓██████████████▓▒░░▒▓████████▓▒░
+░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       
+░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       
+░▒▓██████▓▒░ ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓██████▓▒░  
+░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       
+░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       
+░▒▓████████▓▒░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░</div>
+    <pre class="ascii-note">                          
+                 █▓▓      
+                 ██▓▓     
+                 ██ ▓▓▓   
+                 ██  ▓▓▓  
+                 ██   ▓▓  
+                 ██   ▓▓  
+                 ██  ▓▓   
+                 ██ ▓▓    
+                 ██▓▓     
+          ▓      ██       
+     ▓▓▓▓▓▓▓▓▓▓▓ ██       
+    ▓▓█████████▓▓██       
+   ▓▓███████████▓██       
+  ▓▓▓███████████▓██       
+   ▓▓███████████▓▓        
+    ▓▓█████████▓▓         
+     ▓▓▓▓▓▓▓▓▓▓▓          
+          ▓               
+                          </pre>
+  </div>
+  </div>
+  <div class="site-title">EUGENE DIFFICULT MUSIC ENSEMBLE</div>
+  <div class="site-sub">::: Eugene, OR ::: Experimental Music ::: est. 2019</div>
+  <nav id="main-nav" role="tablist" aria-label="Main navigation">
+    <button role="tab" aria-selected="true"  data-tab="home"     class="active"><span class="ico">⌂</span> home</button>
+    <button role="tab" aria-selected="false" data-tab="events"><span class="ico">𝄜</span> upcoming</button>
+    <button role="tab" aria-selected="false" data-tab="about"><span class="ico">ⓘ</span> about</button>
+    <button role="tab" aria-selected="false" data-tab="festival"><span class="ico">✦</span> nmf</button>
+    <button role="tab" aria-selected="false" data-tab="donate"><span class="ico">𓏲𝄢</span> donate</button>
+    <button role="tab" aria-selected="false" data-tab="contact"><span class="ico">✉</span> contact</button>
+    <button role="tab" aria-selected="false" data-tab="archive"><span class="ico">⿻</span> archive</button>
+  </nav>
+</header>
+
+<main>
+
+  <section id="home" class="tab-panel active" aria-label="home">
+    <div class="hero">
+  <p class="hero-tagline" style="text-align: center;"> <span class="ico">⟡</span> community-driven ⟡ collaboration-oriented ⟡ <a href="https://www.dodiy.org/diy/" target="_blank">DIY ethos ⟡ <a href="https://ideaspace.ystrickler.com/p/rethinking-labels-the-origins-of" target="_blank">metalabel</a> <span class="ico">⟡</span>
+    <span style="display: block; text-align: center;"><span class="ico">ᨒ</span> Eugene OR <span class="ico">꩜</span></span>
+  </p>
+      <p class="mission-statement"><span class="ico">⊙</span> <strong>our mission:</strong> we work to expand the definition of what music can be and what music is capable of achieving &mdash; as well as who is capable of achieving it.</p>
+      <div class="next-bar">
+        <span class="ico">✦</span> NEXT EVENT: <strong class="glitch-text">Our First Ever Gala</strong> <span>6:00 PM, September 5, 2026 &middot; eugene, or &middot; food, drinks &amp; music &middot; <a href="https://givebutter.com/2026-edme-gala-tgaofh" style="color:inherit;text-decoration:underline;">get tickets</a></span>
+      </div>
+      <div class="video-wrap">
+        <div class="v-label"><span class="ico">▶ •၊၊||၊|။||||။‌‌‌‌‌၊|•</span> latest video :::::::::::::::::</div>
+        <div class="video-embed">
+          <iframe src="https://www.youtube.com/embed/pq_B_gJmhh0" title="EDME performances" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+      </div>
+      <div class="listen-links">
+        <span class="ico">(˶ᵔ ᵕ ᵔ˶)</span> Find us on:
+        <a href="https://edme.bandcamp.com" target="_blank">bandcamp</a>
+        <a href="https://www.youtube.com/channel/UC5uybMh-SVrrm-g1tPMYAYQ/featured" target="_blank">youtube</a>
+        <a href="http://www.instagram.com/edmensemble/" target="_blank">instagram</a>
+        <a href="https://edmensemble.substack.com/?utm_campaign=profile_chips" target="_blank"><span class="ico"></span> substack </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="events" class="tab-panel" aria-label="events">
+    <h1><span class="ico">✦</span> Upcoming Events</h1>✦
+    <p>what we're up to &mdash; <strong>all events are free or pay-what-you-can</strong> unless noted.</p>
+    <ul class="events-list">
+      <li>
+        <time datetime="2026-08-01"><span class="ico">✦</span> August 1, 2026</time>
+        <div class="ev-name">Porchfest</div>
+        <div class="ev-detail">1864 Moss St. &middot; eugene, OR &middot; 2:00pm, 4:00pm, and 6:00pm &middot; outdoor &middot; all ages &middot; set by K O T A, a project by Dakota Zitterkopf</div>
+        <span class="ev-tag"><span class="ico">➜</span>concert</span>
+      </li>
+      <li>
+        <time datetime="2026-08-12"><span class="ico">✦</span> August 12, 2026</time>
+        <div class="ev-name">Oakshire Inspires</div>
+        <div class="ev-detail">207 Madison St &middot; eugene, OR &middot; food, drinks &amp; music &middot; $1 per pint sold goes to EDME! Table and music from 5:00-7:00pm</div>
+        <span class="ev-tag"><span class="ico">•</span> fundraiser</span>
+      </li>
+      <li>
+        <time datetime="2026-09-05"><span class="ico">✦</span> September 5, 2026</time>
+        <div class="ev-name">Gala</div>
+        <div class="ev-detail"> Headquarters Wine Bar 325 W 4th Ave &middot; eugene, OR &middot;  Get <a href="https://givebutter.com/2026-edme-gala-tgaofh">tickets ahead</a> </div>
+        <span class="ev-tag"><span class="ico">✦</span> fundraiser</span>
+      </li>
+      <li>
+        <time datetime="2026-10-02"><span class="ico">✦</span> october 2&ndash;4, 2026</time>
+        <div class="ev-name">New Music Festival 2026</div>
+        <div class="ev-detail">TIME, LOCATION, TBD &middot; eugene, OR &middot; 5th annual &middot; presented with IMPULSE New Music Ensemble</div>
+        <span class="ev-tag"><span class="ico">✦</span> festival</span>
+      </li>
+      <li>
+        <time datetime="2026-11-09"><span class="ico">✦</span> November 9, 2026</time>
+        <div class="ev-name">Oakshire Inspires 2.0</div>
+        <div class="ev-detail">416 Main St &middot; springfield, OR &middot; food, drinks &amp; music &middot; $1 per pint sold goes to EDME! Table and music from 5:00-7:00pm</div>
+        <span class="ev-tag"><span class="ico">•</span> fundraiser</span>
+      </li>
+    </ul>
+    <hr>
+    <p class="small"><span class="ico">✉</span> follow <a href="http://www.instagram.com/edmensemble/">@edmensemble</a> for the most current updates &middot; or <a href="https://substack.com/@edmensemble" target="_blank">subscribe to our newsletter on substack</a> <span class="ico">✉</span></p>
+  </section>
+
+  <section id="about" class="tab-panel" aria-label="about">
+    <h1><span class="ico">ⓘ</span> About EDME</h1>
+    <div class="about-cols">
+      <div class="prose">
+        <p>the <strong>eugene difficult music ensemble</strong> (EDME) performs and commissions <em>underrepresented experimental works</em> in order to open ears and minds &mdash; in eugene, oregon and beyond. <span class="ico">˖ ݁♬⋆.˚𝄞</span></p>
+        <h2><span class="ico">⊙</span> mission</h2>
+        <p>we work to expand the definition of what music can be and what music is capable of achieving, as well as <strong>who is capable of achieving it</strong>.</p>
+        <h2><span class="ico">|</span> history</h2>
+        <p>EDME started in 2019 as a trio (soon a quartet) performing bizarre music around eugene. pre-COVID, we co-curated new music nights at venues not normally associated with composed music, bridging trained and untrained musicians &mdash; in yoga studios, dive bars, game shops, and concert halls alike.</p>
+        <p>throughout the pandemic we kept going: a YouTube channel that now hosts nearly 30 videos, outdoor performances at open-air studios and ArtCity's BEAM, and a livestreamed <em>Eugene Garbage Project</em> that turned collected trash into a concert-length work for voice and electronics.</p>
+        <p>since october 2022, our annual <strong>New Music Festival</strong> has brought guest artists and experimental concert music to downtown eugene &mdash; female-identifying, LGBTQ+, and non-white composers are featured strongly among the nearly four dozen composers selected so far. in 2025 we premiered <strong>Ambient Ecology</strong>, a series of calming, ecologically-inspired concerts at Maurie Jacobs Park, and we plan to keep bringing it back every spring.</p>
+        <h2><span class="ico">|</span> press + coverage</h2>
+        <ul class="donate-list">
+          <li><span class="ico">➜</span> <a href="https://www.opb.org/article/2026/06/05/eugene-difficult-music-ensemble-tol/" target="_blank">OPB — Think Out Loud <span class="ico">➜</span></a></li>
+          <li><span class="ico">➜</span> <a href="https://eugenescene.org/reviewer-eugene-difficult-music-ensembles-concerts-are-controlled-chaos-and-wonderful-to-absorb/" target="_blank">Eugene Scene — "controlled chaos, and wonderful to absorb" <span class="ico">➜</span></a></li>
+          <li><span class="ico">➜</span> <a href="https://www.orartswatch.org/the-unfurling-of-reality-eugene-difficult-music-ensembles-annual-new-music-festival/" target="_blank">Oregon ArtsWatch — The Unfurling of Reality <span class="ico">➜</span></a></li>
+        </ul>
+        <p class="small">for press inquiries: <a href="mailto:Secretary@edmensemble.org">Secretary@edmensemble.org</a></p>        
+      </div>
+      <div>
+        <div class="sidebar-section">
+          <h3><span class="ico">|</span> administration</h3>
+          <ul class="person-list">
+            <li>JP Lempke <span class="role">// executive director</span><br><a class="email-link" href="mailto:ExecutiveDirector@edmensemble.org">ExecutiveDirector@edmensemble.org</a></li>
+            <li>Lee Sparks Pembleton <span class="role">// treasurer, founding member</span><br><a class="email-link" href="mailto:Treasurer@edmensemble.org">Treasurer@edmensemble.org</a></li>
+            <li>Adrian Cervantes Mendez <span class="role">// secretary</span><br><a class="email-link" href="mailto:Secretary@edmensemble.org">Secretary@edmensemble.org</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-section">
+          <h3><span class="ico">•</span> org supporters</h3>
+          <p class="sidebar-note">2025&ndash;2026 concert sponsors ($2000+)</p>
+          <ul class="person-list">
+            <li>Eugene Cultural Services Downtown Program Fund</li>
+            <li>Eugene Cultural Services Art in the Parks Grant</li>
+            <li>Marie Lamfrom Sunflower Grant</li>
+            <li>Oregon Cultural Foundation Fred W Fields Fund</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- BIOS SECTION -->
+    <div class="bios-section">
+      <h2><span class="ico">𝄜</span> People</h2>
+      <details class="bio-group">
+        <summary><span class="ico">𝄜</span> Members</summary>
+        <ul class="bio-list">
+          <li>
+            <span class="bio-name">Raquel Armenderiz</span>
+          </li>
+          <li>
+            <span class="bio-name">Jake Chaffee</span>
+          </li>
+          <li>
+            <span class="bio-name">Fedor Chayka</span>
+            <span class="bio-role">flute</span>
+            <span class="bio-text">A music minor and chemistry/math major at the University of Oregon, studying in Dr. Cordova-Arrington's flute studio. Formerly of the Portland Youth Philharmonic.</span>
+          </li>
+          <li>
+            <span class="bio-name">Savannah Gentry</span>
+          </li>
+          <li>
+            <span class="bio-name">Ferris Haukom</span>
+          </li>
+          <li>
+            <span class="bio-name">Sidney Hudelson</span>
+          </li>
+          <li>
+            <span class="bio-name">Ellie Jakes</span>
+            <span class="bio-role">cello / composition / electronics</span>
+            <span class="bio-text">A composer, cellist, and synthesist working across classical, electroacoustic, jazz, and film scoring. Frequent collaborator of Fermata Ballet Collective; MM in Jazz Studies from the University of Oregon.</span>
+          </li>
+          <li>
+            <span class="bio-name">Tyler Kashow</span>
+          </li>
+          <li>
+            <span class="bio-name">Rebecca Keller-Gardner</span>
+          </li>
+          <li>
+            <span class="bio-name">Grace Kuo</span>
+          </li>
+          <li>
+            <span class="bio-name">Victor Lawton II</span>
+          </li>
+          <li>
+            <span class="bio-name">JP Lempke</span>
+            <span class="bio-role">executive director</span>
+          </li>
+          <li>
+            <span class="bio-name">Zichao Liu</span>
+            <span class="bio-role">trumpet</span>
+            <span class="bio-text">A trumpet performer and music educator from China, currently pursuing a DMA at the University of Oregon. Holds an MM from UNC School of the Arts and a BM from the Tianjin Conservatory of Music.</span>
+          </li>
+          <li>
+            <span class="bio-name">Adrian Cervantes Mendez</span>
+            <span class="bio-role">secretary</span>
+          </li>
+          <li>
+            <span class="bio-name">Zoe Oda</span>
+          </li>
+          <li>
+            <span class="bio-name">Frances Pinkham</span>
+          </li>
+          <li>
+            <span class="bio-name">Dakota Zitterkopf</span>
+            <span class="bio-role">trombone</span>
+            <span class="bio-text">A student in the University of Oregon's trombone performance program, with backgrounds in western classical and jazz music as well as music journalism and composition.</span>
+          </li>
+        </ul>
+      </details>
+
+      <details class="bio-group">
+        <summary><span class="ico">⿻</span> Past Ambient Ecology Guest Musicians</summary>
+        <div class="composers-year-section">
+          <details class="year-drop">
+            <summary>2026</summary>
+            <ul class="bio-list">
+              <li>
+                <span class="bio-name">K O T A (Dakota Zitterkopf)</span>
+                <span class="bio-role">trombone / improvisation</span>
+                <span class="bio-text">Solo project of EDME's Dakota Zitterkopf, a trombonist and improviser.</span>
+              </li>
+              <li>
+                <span class="bio-name">Josh Hydeman</span>
+                <span class="bio-role">photography / sound art</span>
+                <span class="bio-text">An Oregon-based interdisciplinary artist whose practice centers on the hidden landscapes of the underground &mdash; recording bats, abandoned mines, and caves.</span>
+              </li>
+              <li>
+                <span class="bio-name">New Agency</span>
+                <span class="bio-role">trio</span>
+                <span class="bio-text">Ranier Collins, Evan MacFarland &amp; Henry Rahe &mdash; an Oregon-based trio blending synth-heavy soundscapes with viola, French horn, guitar, and vocals.</span>
+              </li>
+              <li>
+                <span class="bio-name">Gabie Strong</span>
+                <span class="bio-role">conceptual artist</span>
+                <span class="bio-text">Explores drone, decay, and sonic degeneration through sound, radio, and installation. MFA, UC Irvine; exhibited at MOCA and the UCLA Hammer Museum.</span>
+              </li>
+              <li>
+                <span class="bio-name">D.S.P. Mystic (Bagonia)</span>
+                <span class="bio-role">field recording / spatialized feedback</span>
+                <span class="bio-text">A new project from Portland-based artist Bagonia, using site-specific field recording and audience participation to blur creator and audience.</span>
+              </li>
+              <li>
+                <span class="bio-name">JEC (Jake Chaffee)</span>
+                <span class="bio-role">bass / ambient production</span>
+                <span class="bio-text">A bassist, visual artist, and ambient producer based in Eugene, known for immersive livestreams and the project "three days and."</span>
+              </li>
+            </ul>
+          </details>
+          <details class="year-drop">
+            <summary>2025</summary>
+            <ul class="bio-list">
+              <li>
+                <span class="bio-name">Free Static (Chris Ruiz &amp; Courtney Stubbert)</span>
+                <span class="bio-role">electronics / improvisation</span>
+                <span class="bio-text">An experimental collaboration using electronics, acoustic instruments, and other objects to guide improvised sonic exploration between chaos and order; their AE set dialogued with samples from an obscure 1970s meditation record.</span>
+              </li>
+              <li>
+                <span class="bio-name">Don Haugen</span>
+                <span class="bio-role">electronics / sound installation</span>
+                <span class="bio-text">An Eugene-based sound artist working with tape loops, oscillators, feedback, and home-built electronics since the late 1980s to explore location-specific sound and room dynamics; curator and founder of the Eugene Noise Festival (est. 2005).</span>
+              </li>
+              <li>
+                <span class="bio-name">Jennifer Wright</span>
+                <span class="bio-role">piano / composition / installation</span>
+                <span class="bio-text">A pianist, composer, and interdisciplinary artist who builds large-scale instruments and sound installations from industrial debris to confront climate change and overconsumption; exhibited at the Oregon Jewish Museum and the Alaska State Museum, and featured on OPB's Think Out Loud.</span>
+              </li>
+              <li>
+                <span class="bio-name">Owen (XDL)</span>
+                <span class="bio-role">electronic production / radio</span>
+                <span class="bio-text">A Portland-based performer, producer, and composer releasing music as XDL, drawing on hip hop, electronic music, jazz, and video game soundtracks; 1st place in UO's 2023 Electronic Music Composition Competition, heard Sundays on 104.7 KDUK.</span>
+              </li>
+              <li>
+                <span class="bio-name">Luke Wyland</span>
+                <span class="bio-role">composition / improvisation</span>
+                <span class="bio-text">A Portland-based interdisciplinary artist and composer with 20 years of releases in AU, Methods Body, and as LWW, most recently the solo record Kuma Cove (Balmat, 2024); works across improvisation, somatic embodiment, and bespoke tuning systems.</span>
+              </li>
+              <li>
+                <span class="bio-name">Daniel Menche</span>
+                <span class="bio-role">noise / drone</span>
+                <span class="bio-text">An iconic Portland experimental musician with three decades of noise, drone, and field-recording-based work across more than 60 albums, released on labels including Editions Mego, Touch Music, and Ash International.</span>
+              </li>
+            </ul>
+          </details>
+        </div>
+      </details>
+
+      <details class="bio-group">
+        <summary><span class="ico">𓏲</span> Past Members</summary>
+        <ul class="bio-list">
+          <li>
+            <span class="bio-name">K.C. Isaman</span>
+            <span class="bio-role">double bass</span>
+            <span class="bio-text">A multi-genre bassist &mdash; orchestral, chamber, jazz, and improvised &mdash; pursuing a Master's in Historical Performance Practice at the University of Oregon under Tyler Abbott.</span>
+          </li>
+          <li>
+            <span class="bio-name">Owen Atlansky</span>
+            <span class="bio-role">electric guitar / audio engineering</span>
+            <span class="bio-text">A performer, producer, composer, and radio jock from Portland, releasing music as XDL. 1st place, UO's 2023 Electronic Music Composition Competition. Heard on 104.7 KDUK.</span>
+          </li>
+          <li>
+            <span class="bio-name">Jayne Cronin</span>
+            <span class="bio-role">double bass</span>
+            <span class="bio-text">A music education student and double bassist from Mundelein, Illinois. Winner of a Leonard Bernstein Award and former senior soloist and symphony orchestra president.</span>
+          </li>
+        </ul>
+        <p class="sidebar-note">a full past-member archive is coming soon &mdash; check back or ask us directly.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="festival" class="tab-panel" aria-label="festival">
+    <h1><span class="ico">✦</span> New Music Festival</h1>
+
+    <div class="nmf-equity-banner">
+      <span class="ico">✦</span> <strong class="glitch-text">composers from historically underrepresented groups are strongly encouraged to apply</strong> &mdash; including people of color, and LGBTQIA+ individuals. our review process is not anonymous, since we want to know who our composers are.
+    </div>
+
+    <p>our 5th annual festival &mdash; presented with <strong>IMPULSE New Music Ensemble</strong>, our third year partnering together, is a four-concert series of experimental scored and unscored works, improvisations, and audience participation pieces, occuring on October 2&ndash;4, 2026 in eugene, or. all performances are free and open to the public.</p>
+    <p>we welcome works across all experimental traditions &mdash; acoustic, electronic, improvised, mixed-media, and beyond. we also accept <strong>text-based and graphic scores</strong>. <em>no stylistic prerequisites</em>. we prioritize work that takes risks. <span class="ico">꩜</span></p>
+
+    <div class="nmf-grid">
+      <div class="nmf-box">
+        <h3><span class="ico">✉</span> Call for Scores &mdash; 2026</h3>
+        <p>open march 16 &ndash; june 1, 2026 (11:59pm PDT). notifications by july 1. $5&ndash;15 sliding-scale fee, waivers available to anyone who asks, no questions. up to 2 scores per composer.</p>
+        <a href="https://forms.gle/Tw5hXBiXXVzDuKHbA" class="btn" target="_blank">submit now <span class="ico">➜</span></a>
+      </div>
+      <div class="nmf-box">
+        <h3><span class="ico">꩜</span> Guest Artist Application</h3>
+        <p>we invite guest artists to perform, present, and collaborate with our ensemble and community. see the application page for current openings and deadlines.</p>
+        <a href="https://www.edmensemble.org/guest-artist-application" class="btn btn-ghost" target="_blank">apply <span class="ico">➜</span></a>
+      </div>
+    </div>
+
+    <h2><span class="ico">𓏲</span> Selected Composers</h2>
+    <div class="composers-year-section">
+      <details class="year-drop">
+        <summary>2025</summary>
+        <p class="small" style="margin-bottom:var(--sp-px-8);">selected composers: Anak Baiharn, Erin C Blake, Zygmund de Somogyi, Frank Felice, Brian Field, Kyle Grimm, Robin Haigh, Liann Kang, Abby Kellems, June Young (Will) Kim, Alexey Logunov, Asher Lurie, Alan Mackwell, Gísli Magnússon, Eleanor Margraf, Matt Mason, Ugo Raimondi, Kian Ravaei, Leah Reid, Jee Seo, MA Tiesenga, Gloria Xia &middot; selected guest artists: Emma Denney, Jakob Heinemann, Gracie Fagan, Hermetic Fever, Varun Kishore, Adrianna Svitak</p>
+        <ul class="year-composers">
+          <li><span class="piece-title">&ldquo;What Was Then Isn't Now and Will Never Be Again&rdquo;</span></li>
+          <li><span class="piece-title">&ldquo;Meeball's Wacky Adventure&rdquo;</span></li>
+          <li><span class="piece-title">&ldquo;PIXELHEAD&rdquo;</span></li>
+          <li><span class="piece-title">&ldquo;Ten Sacks O'Sneaks and Snacks&rdquo;</span></li>
+          <li><span class="piece-title">&ldquo;Three Passions for Our Tortured Planet&rdquo;</span></li>
+          <li><span class="piece-title">&ldquo;ECHO ECHO&rdquo;</span></li>
+          <li><span class="piece-title">&ldquo;L'amour pur&rdquo;</span></li>
+          <li><span class="piece-title">&ldquo;Study of Snowflakes&rdquo;</span></li>
+          <li><span class="piece-title">&ldquo;Stuðlagil&rdquo;</span></li>
+          <li><span class="piece-title">&ldquo;Ecstasies&rdquo;</span></li>
+        </ul>
+      </details>
+      <details class="year-drop">
+        <summary>2024</summary>
+        <ul class="year-composers">
+          <li>David Acavedo <span class="piece-title">&ldquo;Chroma&rdquo;</span></li>
+          <li>William Bolles-Beaven <span class="piece-title">&ldquo;Dialogue&rdquo;</span></li>
+          <li>Alicia Castillo <span class="piece-title">&ldquo;Billow&rdquo;</span></li>
+          <li>Daniel DeTogni <span class="piece-title">&ldquo;Postcards From Veneta&rdquo;</span></li>
+          <li>Emma Denney <span class="piece-title">&ldquo;Fresh Fuel for the Sodium Flares&rdquo;</span></li>
+          <li>Robin Haigh <span class="piece-title">&ldquo;traces in the earth of our bodies&rdquo;</span></li>
+          <li>Fani Kosona <span class="piece-title">&ldquo;Etude Topologiques: 3. Transforming into Light&rdquo;</span></li>
+          <li>Henry McPherson <span class="piece-title">&ldquo;How to Play Mariana&rdquo;</span></li>
+          <li>MA Tiesenga <span class="piece-title">&ldquo;Ebi Revolution&rdquo;</span></li>
+          <li>Cooper Wood <span class="piece-title">&ldquo;Celestial Bodies&rdquo;</span></li>
+        </ul>
+      </details>
+      <details class="year-drop">
+        <summary>2023</summary>
+        <ul class="year-composers">
+          <li>Anuj Bhutani <span class="piece-title">&ldquo;flightpath&rdquo;</span></li>
+          <li>Dinah Bianchi <span class="piece-title">&ldquo;Harmony 58&rdquo;</span></li>
+          <li>Chin Ting Chan <span class="piece-title">&ldquo;52 Blue&rdquo;</span></li>
+          <li>Gracie Fagan <span class="piece-title">&ldquo;Genzennial&rdquo;</span></li>
+          <li>Mikhail Johnson <span class="piece-title">&ldquo;Wach ya HAYDN?!&rdquo;</span></li>
+          <li>João Pedro Oliveira <span class="piece-title">&ldquo;Rust&rdquo;</span></li>
+          <li>Michèle Saint-Michel <span class="piece-title">&ldquo;Score for Memories and the Weather in Montenegro&rdquo;</span></li>
+          <li>Marta Tiesenga <span class="piece-title">&ldquo;Vík í Mýrdal&rdquo;</span></li>
+        </ul>
+      </details>
+      <details class="year-drop">
+        <summary>2022</summary>
+        <ul class="year-composers">
+          <li>Erin Blake <span class="piece-title">&ldquo;Storm King&rdquo;</span></li>
+          <li>Ryan Carter <span class="piece-title">&ldquo;Direct Attention&rdquo;</span></li>
+          <li>Luis Fernando Amaya <span class="piece-title">&ldquo;For it is Our First Universe&rdquo;</span></li>
+          <li>Nolan Hildebrand <span class="piece-title">&ldquo;guerrilla de dientes entre los árboles&rdquo;</span></li>
+          <li>Leah Reid <span class="piece-title">&ldquo;Crumbs&rdquo;</span></li>
+          <li>Josiah Tayag Catalan <span class="piece-title">&ldquo;Sage's Gardens&rdquo;</span></li>
+        </ul>
+      </details>
+    </div>
+
+    <div class="composers-year-section">
+      <details class="bio-group">
+        <summary><span class="ico">✦</span> 2025 Selected Guest Artists</summary>
+        <ul class="bio-list">
+          <li><span class="bio-name">Emma Denney</span></li>
+          <li><span class="bio-name">Jakob Heinemann</span></li>
+          <li><span class="bio-name">Gracie Fagan</span></li>
+          <li><span class="bio-name">Hermetic Fever</span></li>
+          <li><span class="bio-name">Varun Kishore</span></li>
+          <li><span class="bio-name">Adrianna Svitak</span></li>
+          <li><span class="bio-name">Mage</span> <span class="bio-role">video installation</span></li>
+        </ul>
+      </details>
+      <details class="bio-group">
+        <summary><span class="ico">✦</span> 2024 Selected Guest Artists</summary>
+        <ul class="bio-list">
+          <li><span class="bio-name">Peer2Peer</span></li>
+          <li><span class="bio-name">Professor Lumos</span></li>
+          <li><span class="bio-name">Ryan Carraher</span></li>
+          <li><span class="bio-name">Synsor</span></li>
+          <li><span class="bio-name">Treya Nash</span></li>
+          <li><span class="bio-name">Mage</span> <span class="bio-role">video installation</span></li>
+        </ul>
+      </details>
+      <details class="bio-group">
+        <summary><span class="ico">✦</span> 2023 Selected Guest Artists</summary>
+        <ul class="bio-list">
+          <li><span class="bio-name">Don Haugen</span></li>
+          <li><span class="bio-name">Free Static</span></li>
+          <li><span class="bio-name">Mrs. Hands</span></li>
+          <li><span class="bio-name">M Denney</span></li>
+          <li><span class="bio-name">Jennifer Wright</span></li>
+        </ul>
+      </details>
+      <details class="bio-group">
+        <summary><span class="ico">✦</span> 2022 Selected Guest Artists</summary>
+        <ul class="bio-list">
+          <li><span class="bio-name">Aine Nakamura</span></li>
+          <li><span class="bio-name">Free Static</span></li>
+          <li><span class="bio-name">M Denney</span></li>
+          <li><span class="bio-name">Mystic Elevator</span></li>
+        </ul>
+      </details>
+    </div>
+
+    <div class="composers-year-section">
+      <details class="year-drop">
+        <summary>2026</summary>
+        <p class="small" style="margin-bottom:var(--sp-px-8);">coming soon&hellip;</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="donate" class="tab-panel" aria-label="donate">
+    <h1><span class="ico">•</span> Donate</h1>
+    <p>your support helps us <strong>pay artists fairly</strong>, maintain <em>free public programming</em>, and keep our open calls accessible to composers everywhere. <span class="ico">˖</span></p>
+    <p>when you give to EDME, you're paying artists. every dollar goes directly to the work.</p>
+    <div class="donate-image">
+      <img src="https://www.orartswatch.org/wp-content/uploads/2026/01/Meeballs-Wacky-Adventure-600x450.jpeg" alt="Photo from EDME's New Music Festival performance of 'Meeball's Wacky Adventure'" loading="lazy">
+    </div>
+    <ul class="donate-list">
+      <li><span class="ico">˖</span> <a href="https://www.paypal.com/donate/?hosted_button_id=S9N4C79Q2QTLG" target="_blank">donate via paypal <span class="ico">➜</span></a></li>
+      <li><span class="ico">˖</span> <a href="https://substack.com/@edmensemble" target="_blank">read us on substack <span class="ico">➜</span></a></li>
+      <li><span class="ico">ᨒ</span> <a href="https://edme.threadless.com/" target="_blank">buy merch (threadless) <span class="ico">➜</span></a></li>
+      <li><span class="ico">𝄜</span> <a href="https://edme.bandcamp.com" target="_blank">buy our music (bandcamp) <span class="ico">➜</span></a></li>
+    </ul>
+    <hr>
+    <p class="small">for large gifts or institutional giving &rarr; <a href="mailto:ExecutiveDirector@edmensemble.org">ExecutiveDirector@edmensemble.org</a> <span class="ico">✉</span></p>
+
+    <div class="individual-supporters">
+      <h2><span class="ico">•</span> Individual Supporters</h2>
+      <p style="font-size:var(--fs-sm-5);color:var(--muted);margin-bottom:var(--sp-10);">thank you to everyone who has supported EDME as an individual donor in our 2025&ndash;2026 season. your contributions make this work possible.</p>
+      <p class="small tier-label"><strong>performance supporters</strong> ($500&ndash;1999)</p>
+      <div class="supporter-names">
+        David and Mary Lempke<br>
+      </div>
+      <p class="small tier-label"><strong>artist benefactors</strong> ($200&ndash;499)</p>
+      <div class="supporter-names">
+        Chad Scarborough<br>
+        Mike and Carolee Jakes<br>
+        Shannan and Marshall Brengle<br>
+      </div>
+      <p class="small tier-label"><strong>substack subscribers</strong></p>
+      <div class="supporter-names">
+        Austin Rich &middot; Cassidy Wagner &middot; Corntastic Guy &middot; Derek Atlansky &middot; Earthbound Moon<br>
+        Jason Wiley &middot; Justin Ambron &middot; Janet Stott and Arthur Pembleton &middot; Ruth &middot; Ryan Rix &middot; Zane Ridings<br>
+      </div>
+      <p class="small tier-label"><strong>friends of EDME</strong> ($25&ndash;199)</p>
+      <div class="supporter-names">
+        Aden Ward &middot; Andrew Swanson and Lydia Harlan &middot; Christopher Scott Bell &middot; Community Cup Coffee<br>
+        David Dellacroce &middot; Donald Morgan &middot; Flux Crystals &middot; Jon Bellona &middot; Matt Barton &middot; Max's Tavern<br>
+        Michael Alex Weber &middot; Nicole Lillegard &middot; Oldoc Benway &middot; Pavilanis School of Music &middot; Rachelle Suzuki and Jesus Barocio<br>
+      </div>
+      <p class="small tier-label"><strong>in-kind donors</strong></p>
+      <div class="supporter-names">
+        First Christian Church &middot; John Park &middot; Jorge Navarro &middot; The&nbsp;Copy&nbsp;Shop<br>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="tab-panel" aria-label="contact">
+    <h1><span class="ico">✉</span> Contact</h1>
+    <p>get in touch. we read everything. <span class="ico">✦</span></p>
+    <table class="contact-table">
+      <tr><td><span class="ico">|</span> membership, booking, collaboration</td><td>JP Lempke &middot; <a href="mailto:ExecutiveDirector@edmensemble.org">ExecutiveDirector@edmensemble.org</a></td></tr>
+      <tr><td><span class="ico">✉</span> general inquiries, new music festival</td><td>Adrian Cervantes &middot; <a href="mailto:Secretary@edmensemble.org">Secretary@edmensemble.org</a></td></tr>
+      <tr><td><span class="ico">🕪</span> sound of curiosity, fake music book</td><td>Lee Pembleton &middot; <a href="mailto:Treasurer@edmensemble.org">Treasurer@edmensemble.org</a></td></tr>
+      <tr><td><span class="ico">✉</span> newsletter</td><td><a href="https://www.edmensemble.org" target="_blank">subscribe on our site <span class="ico">➜</span></a></td></tr>
+      <tr><td><span class="ico">•</span> instagram</td><td><a href="http://www.instagram.com/edmensemble/" target="_blank">@edmensemble <span class="ico">➜</span></a></td></tr>
+      <tr><td><span class="ico">•</span> facebook</td><td><a href="http://www.facebook.com/EDMEnsemble" target="_blank">facebook.com/EDMEnsemble <span class="ico">➜</span></a></td></tr>
+      <tr><td><span class="ico">▶</span> youtube</td><td><a href="https://www.youtube.com/channel/UC5uybMh-SVrrm-g1tPMYAYQ/featured" target="_blank">edme on youtube <span class="ico">➜</span></a></td></tr>
+      <tr><td><span class="ico">𝄜</span> bandcamp</td><td><a href="https://edme.bandcamp.com" target="_blank">edme.bandcamp.com <span class="ico">➜</span></a></td></tr>
+      <tr><td><span class="ico">˖</span> substack</td><td><a href="https://substack.com/@edmensemble" target="_blank">substack.com/@edmensemble <span class="ico">➜</span></a></td></tr>
+    </table>
+  </section>
+
+  <section id="archive" class="tab-panel" aria-label="archive">
+    <h1><span class="ico">𓏲</span> Archive</h1>
+    <p class="sidebar-note">a record of our past work &mdash; concerts, projects, publications, and community events &mdash; is coming soon. check back or ask us directly.</p>
+    <!-- Archive content, preserved for restoring later:
+    <p>a record of <strong>past work</strong> &mdash; concerts, projects, publications, and community events.</p>
+    <ul class="events-list">
+      <li>
+        <time><span class="ico">➜</span> 2025&ndash;2026</time>
+        <div class="ev-name">Ambient Ecology</div>
+        <div class="ev-detail">calming, ecologically-inspired concerts at Maurie Jacobs Park, opening each show with a Pauline Oliveros Sonic Meditation. returning every spring.</div>
+        <span class="ev-tag"><span class="ico">➜</span> outdoor series</span>
+        <a class="doc-link" href="https://www.edmensemble.org/ambient-ecology" target="_blank"><span class="ico">|</span> project page <span class="ico">➜</span></a>
+      </li>
+      <li>
+        <time><span class="ico">✦</span> annual</time>
+        <div class="ev-name">New Music Festival</div>
+        <div class="ev-detail">our annual multi-concert series of selected new works, guest artists, and audience-participation pieces in downtown eugene &mdash; now presented with IMPULSE New Music Ensemble.</div>
+        <span class="ev-tag"><span class="ico">✦</span> festival</span>
+        <a class="doc-link" href="https://www.edmensemble.org/details" target="_blank"><span class="ico">|</span> festival details <span class="ico">➜</span></a>
+      </li>
+      <li>
+        <time><span class="ico">🕪</span> since 2022</time>
+        <div class="ev-name">The Sound of Curiosity</div>
+        <div class="ev-detail">our radio broadcast on Beware! the Radio, featuring interviews with underrepresented composers about their craft. hosted by Lee Pembleton &amp; Adrian Cervantes.</div>
+        <span class="ev-tag"><span class="ico">🕪</span> radio show</span>
+        <a class="doc-link" href="https://www.edmensemble.org/the-sound-of-curiosity" target="_blank"><span class="ico">|</span> project page <span class="ico">➜</span></a>
+      </li>
+      <li>
+        <time><span class="ico">|</span> since 2023</time>
+        <div class="ev-name">Fake Music Book</div>
+        <div class="ev-detail">our quarterly zine of essays, updates, and graphic scores. available at every EDME concert; free digitally for $5+ Substack subscribers.</div>
+        <span class="ev-tag"><span class="ico">|</span> zine</span>
+        <a class="doc-link" href="https://www.edmensemble.org/zine" target="_blank"><span class="ico">|</span> project page <span class="ico">➜</span></a>
+      </li>
+      <li>
+        <time><span class="ico">⿻</span> 2024</time>
+        <div class="ev-name">Stories from the Unhoused</div>
+        <div class="ev-detail">a 45-minute work for chamber ensemble and dance, built from interviews with members of Eugene's unhoused community. presented in the East Park Block, June 2024.</div>
+        <span class="ev-tag"><span class="ico">⿻</span> community</span>
+        <a class="doc-link" href="https://www.edmensemble.org/stories" target="_blank"><span class="ico">|</span> project page <span class="ico">➜</span></a>
+      </li>
+      <li>
+        <time><span class="ico">ᨒ</span> 2020&ndash;2021</time>
+        <div class="ev-name">Eugene Garbage Project</div>
+        <div class="ev-detail">EDME's first major project &mdash; local trash transformed into a concert-length work for voice and live electronics, with guest artist Emma Rose Lynn.</div>
+        <span class="ev-tag"><span class="ico">ᨒ</span> project</span>
+        <a class="doc-link" href="https://www.edmensemble.org/egp" target="_blank"><span class="ico">|</span> project page <span class="ico">➜</span></a>
+      </li>
+    </ul>
+    -->
+  </section>
+
+</main>
+
+<footer>
+  <div>
+    <a href="http://www.instagram.com/edmensemble/" target="_blank"><span class="ico">•</span> instagram</a> &middot; <a href="https://www.youtube.com/channel/UC5uybMh-SVrrm-g1tPMYAYQ/featured" target="_blank"><span class="ico">▶</span> youtube</a> &middot; <a href="https://edme.bandcamp.com" target="_blank"><span class="ico">𝄜</span> bandcamp</a> &middot; <a href="https://substack.com/@edmensemble" target="_blank"><span class="ico">˖</span> substack</a> &middot; <a href="http://www.facebook.com/EDMEnsemble" target="_blank"><span class="ico">•</span> facebook</a> &middot; <a href="https://www.paypal.com/donate/?hosted_button_id=S9N4C79Q2QTLG" target="_blank"><span class="ico">˖</span> donate</a><br>
+    <a href="mailto:Secretary@edmensemble.org">Secretary@edmensemble.org</a> &middot; Eugene, OR <span class="ico">➜</span><br>
+    <span class="small"><span class="ico">➜</span> website by dakota, ellie &amp; adrian &middot; stewarded by ellie &middot; designed for slow internet <span class="ico">ᨒ</span></span>
+ 
+
+<script>
+  function toggleDyslexic() {
+    var body = document.body;
+    var btn  = document.getElementById('a11y-btn');
+    var on   = body.classList.toggle('dyslexic');
+    btn.classList.toggle('active', on);
+    btn.innerHTML = on
+      ? '<span class="ico">|</span> dyslexic<br>mode on'
+      : '<span class="ico">|</span> dyslexia<br>friendly';
+    try { localStorage.setItem('edme-dyslexic', on ? '1' : '0'); } catch(e) {}
+  }
+
+  try {
+    if (localStorage.getItem('edme-dyslexic') === '1') {
+      document.body.classList.add('dyslexic');
+      var btn = document.getElementById('a11y-btn');
+      if (btn) { btn.classList.add('active'); btn.innerHTML = '<span class="ico">|</span> dyslexic<br>mode on'; }
+    }
+  } catch(e) {}
+
+  var buttons = document.querySelectorAll('#main-nav [role="tab"]');
+  var panels  = document.querySelectorAll('main .tab-panel');
+
+  buttons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var target = btn.getAttribute('data-tab');
+      buttons.forEach(function(b) {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      panels.forEach(function(p) {
+        p.classList.remove('active');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      document.getElementById(target).classList.add('active');
+      window.scrollTo({ top: 0 });
+    });
+  });
+</script>
+
+</body>
+</html>
